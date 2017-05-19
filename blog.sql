@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 15, 2017 at 09:43 PM
+-- Generation Time: May 19, 2017 at 01:12 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -49,19 +49,20 @@ INSERT INTO `blog_members` (`memberID`, `username`, `password`, `email`, `postID
 
 CREATE TABLE `blog_posts` (
   `postID` int(11) NOT NULL,
-  `postTitle` varchar(255) DEFAULT NULL,
-  `postDesc` text NOT NULL,
-  `postCont` text NOT NULL,
-  `postDate` datetime DEFAULT NULL,
-  `movieID` int(11) DEFAULT NULL
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `content` varchar(10000) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `movieID` int(11) DEFAULT NULL,
+  `ratingID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=ucs2;
 
 --
 -- Dumping data for table `blog_posts`
 --
 
-INSERT INTO `blog_posts` (`postID`, `postTitle`, `postDesc`, `postCont`, `postDate`, `movieID`) VALUES
-(1, 'The Godafther Film Review', 'we are just starting to create a blog', 'testing 1 2 3', '2017-05-13 19:00:00', 1);
+INSERT INTO `blog_posts` (`postID`, `title`, `description`, `content`, `date`, `movieID`, `ratingID`) VALUES
+(1, 'The Godafther Film Review', 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.', 'This movie is strong, good script, great casting, excellent acting, and over the top directing. It is hard to fine a movie done this well, it is 29 years old and has aged well. Even if the viewer does not like mafia type of movies, he or she will watch the entire film, the audiences is glued to what will happen next as the film progresses. Its about, family, loyalty, greed, relationships, and real life. This is a great mix, and the artistic style make the film memorable.', '2017-05-13 19:00:00', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -71,18 +72,39 @@ INSERT INTO `blog_posts` (`postID`, `postTitle`, `postDesc`, `postCont`, `postDa
 
 CREATE TABLE `category` (
   `catID` int(11) NOT NULL,
-  `catName` varchar(100) CHARACTER SET ucs2 NOT NULL
+  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `category`
 --
 
-INSERT INTO `category` (`catID`, `catName`) VALUES
+INSERT INTO `category` (`catID`, `name`) VALUES
 (1, 'crime'),
 (2, 'comedy'),
 (3, 'drama'),
 (4, 'horror');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `commentID` int(11) NOT NULL,
+  `comment` varchar(1000) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `member` varchar(100) NOT NULL,
+  `postID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`commentID`, `comment`, `date`, `member`, `postID`) VALUES
+(1, 'Test comment', '2017-05-19 00:00:00', 'emileelam', 1);
 
 -- --------------------------------------------------------
 
@@ -92,17 +114,17 @@ INSERT INTO `category` (`catID`, `catName`) VALUES
 
 CREATE TABLE `movies` (
   `movieID` int(11) NOT NULL,
-  `movieName` varchar(500) NOT NULL,
-  `movieYear` int(11) DEFAULT NULL,
-  `movieCert` varchar(50) NOT NULL,
-  `movieRunTime` varchar(100) NOT NULL
+  `name` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `certificate` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `runTime` varchar(255) CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `movies`
 --
 
-INSERT INTO `movies` (`movieID`, `movieName`, `movieYear`, `movieCert`, `movieRunTime`) VALUES
+INSERT INTO `movies` (`movieID`, `name`, `year`, `certificate`, `runTime`) VALUES
 (1, 'The Godfather', 1972, '18', '2 hrs 55 mins');
 
 -- --------------------------------------------------------
@@ -113,7 +135,7 @@ INSERT INTO `movies` (`movieID`, `movieName`, `movieYear`, `movieCert`, `movieRu
 
 CREATE TABLE `movie_categories` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 NOT NULL,
   `movieID` int(11) DEFAULT NULL,
   `catID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -125,6 +147,28 @@ CREATE TABLE `movie_categories` (
 INSERT INTO `movie_categories` (`id`, `name`, `movieID`, `catID`) VALUES
 (1, 'The Godfather - Drama Category', 1, 1),
 (2, 'The Godfather - Crime Category', 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Rating`
+--
+
+CREATE TABLE `Rating` (
+  `ratingID` int(11) NOT NULL,
+  `rating` varchar(100) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Rating`
+--
+
+INSERT INTO `Rating` (`ratingID`, `rating`) VALUES
+(1, '1/5'),
+(2, '2/5'),
+(3, '3/5'),
+(4, '4/5'),
+(5, '5/5');
 
 --
 -- Indexes for dumped tables
@@ -142,13 +186,21 @@ ALTER TABLE `blog_members`
 --
 ALTER TABLE `blog_posts`
   ADD PRIMARY KEY (`postID`),
-  ADD KEY `movieID` (`movieID`);
+  ADD KEY `movieID` (`movieID`),
+  ADD KEY `ratingID` (`ratingID`);
 
 --
 -- Indexes for table `category`
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`catID`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`commentID`),
+  ADD KEY `postID` (`postID`);
 
 --
 -- Indexes for table `movies`
@@ -163,6 +215,12 @@ ALTER TABLE `movie_categories`
   ADD PRIMARY KEY (`id`),
   ADD KEY `movieID` (`movieID`),
   ADD KEY `catID` (`catID`);
+
+--
+-- Indexes for table `Rating`
+--
+ALTER TABLE `Rating`
+  ADD PRIMARY KEY (`ratingID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -184,6 +242,11 @@ ALTER TABLE `blog_posts`
 ALTER TABLE `category`
   MODIFY `catID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
@@ -193,6 +256,11 @@ ALTER TABLE `movies`
 --
 ALTER TABLE `movie_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `Rating`
+--
+ALTER TABLE `Rating`
+  MODIFY `ratingID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Constraints for dumped tables
 --
@@ -207,7 +275,14 @@ ALTER TABLE `blog_members`
 -- Constraints for table `blog_posts`
 --
 ALTER TABLE `blog_posts`
-  ADD CONSTRAINT `blog_posts_ibfk_1` FOREIGN KEY (`movieID`) REFERENCES `movies` (`movieID`);
+  ADD CONSTRAINT `blog_posts_ibfk_1` FOREIGN KEY (`movieID`) REFERENCES `movies` (`movieID`),
+  ADD CONSTRAINT `blog_posts_ibfk_2` FOREIGN KEY (`ratingID`) REFERENCES `Rating` (`ratingID`);
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`postID`) REFERENCES `blog_posts` (`postID`);
 
 --
 -- Constraints for table `movie_categories`
