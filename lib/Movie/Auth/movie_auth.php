@@ -11,32 +11,20 @@ function login($pdo, $username, $password) {
 
     $username = stripcslashes($username);
     $password = stripcslashes($password);
-    //$username = mysqli_real_escape_string($pdo,$username);
-    //$password = mysqli_real_escape_string($pdo,$password);
+
 
     $user = read_user($pdo, $username, $password);
     password_verify($password, $user['password']);
 
-    // print_r($user);
-    print_r($_POST);
 
 
     if ($username && password_verify($password, $user['password'])) {
         $_SESSION['login_user'] = $username; // Initializing Session 
+       // echo $username;
+      //  echo '<a href="index.php?logout"><span>Logout</span></a></li>';
         header('Location: index_1.php');
-        /* if(isset($_POST['username']) & POST['password']) {
-          //$_SESSION['valid'] = true;
-          $_SESSION['login_user']=$username; // Initializing Session
-          //print_r($_SESSION);
-          //echo "you are logged in";
-          // ob_end_clean();
-          header('Location: index_1.php'); */
     } else {
-        //  print_r($username);
-        //print_r($user);
-        //print_r($password);
         echo "Username or Password is invalid";
-        //header('Location: login.php');*/
     }
 
     function logout() {
