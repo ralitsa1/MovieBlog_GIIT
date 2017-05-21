@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 21, 2017 at 01:25 PM
+-- Generation Time: May 19, 2017 at 01:12 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -117,17 +117,15 @@ CREATE TABLE `movies` (
   `name` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `year` int(11) DEFAULT NULL,
   `certificate` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `runTime` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `image` varchar(5000) DEFAULT NULL,
-  `video` varchar(5000) DEFAULT NULL
+  `runTime` varchar(255) CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `movies`
 --
 
-INSERT INTO `movies` (`movieID`, `name`, `year`, `certificate`, `runTime`, `image`, `video`) VALUES
-(1, 'The Godfather', 1972, '18', '2 hrs 55 mins', 'https://i.ytimg.com/vi/rt-r-w7Z2Ag/maxresdefault.jpg', 'https://www.youtube.com/watch?v=sY1S34973zA');
+INSERT INTO `movies` (`movieID`, `name`, `year`, `certificate`, `runTime`) VALUES
+(1, 'The Godfather', 1972, '18', '2 hrs 55 mins');
 
 -- --------------------------------------------------------
 
